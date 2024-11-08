@@ -6,19 +6,34 @@
 </head>
 <body>
     <h1>Джойстик</h1>
-    <button style="width: 100px; height: 100px;" onclick="sendCommand('up')">⬆️</button><br>
-    <button style="width: 100px; height: 100px;" onclick="sendCommand('left')">⬅️</button>
-    <button style="width: 100px; height: 100px;" onclick="sendCommand('right')">➡️</button><br>
-    <button style="width: 100px; height: 100px;" onclick="sendCommand('down')">⬇️</button>
+    <button onclick="sendCommand('up')">⬆️</button><br>
+    <button onclick="sendCommand('left')">⬅️</button>
+    <button onclick="sendCommand('right')">➡️</button><br>
+    <button onclick="sendCommand('down')">⬇️</button>
 
     <script>
         const socket = new WebSocket('ws://localhost:8080');
         
-        socket.onopen = () => console.log('Подключено к серверу');
-        
+        // Отладочные сообщения для соединения
+        socket.onopen = () => {
+            console.log('Подключено к серверу WebSocket');
+        };
+
+        socket.onerror = (error) => {
+            console.error('Ошибка WebSocket:', error);
+        };
+
+        socket.onclose = () => {
+            console.log('Соединение с сервером WebSocket закрыто');
+        };
+
         function sendCommand(command) {
-            console.log(`Отправляем команду: ${command}`);  // Логируем команду
-            socket.send(command);  // Отправляем команду в виде строки
+            if (socket.readyState === WebSocket.OPEN) {
+                console.log(`Отправляем команду: ${command}`);  // Логируем команду перед отправкой
+                socket.send(command);  // Отправляем команду в виде строки
+            } else {
+                console.log('WebSocket не подключен');
+            }
         }
     </script>
 </body>

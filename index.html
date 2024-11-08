@@ -13,10 +13,10 @@
         
         socket.onopen = () => console.log('Подключено к серверу');
         
-        // Отправляем текст при каждом изменении
+        // Отправляем текст в строковом формате при каждом изменении
         document.getElementById('textInput').addEventListener('input', (event) => {
             const text = event.target.value;
-            socket.send(text);
+            socket.send(text.toString());  // Убедимся, что данные отправляются как строка
         });
     </script>
 </body>

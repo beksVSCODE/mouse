@@ -1,0 +1,32 @@
+<!-- laptop.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse Receiver</title>
+    <style>
+        #cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+        const cursor = document.getElementById('cursor');
+
+        socket.onopen = () => console.log('Подключено к серверу');
+        
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            cursor.style.left = data.x + 'px';
+            cursor.style.top = data.y + 'px';
+        };
+    </script>
+</body>
+</html>

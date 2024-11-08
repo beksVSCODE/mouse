@@ -1,0 +1,21 @@
+<!-- phone.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Controller</title>
+</head>
+<body>
+    <h1>Используйте экран для управления курсором</h1>
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+        
+        socket.onopen = () => console.log('Подключено к серверу');
+        
+        document.addEventListener('touchmove', (event) => {
+            const touch = event.touches[0];
+            const data = JSON.stringify({ x: touch.clientX, y: touch.clientY });
+            socket.send(data);
+        });
+    </script>
+</body>
+</html>

@@ -2,19 +2,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Phone Controller</title>
+    <title>Phone Input</title>
 </head>
 <body>
-    <h1>Используйте экран для управления курсором</h1>
+    <h1>Введите текст</h1>
+    <input type="text" id="textInput" placeholder="Введите текст" />
+
     <script>
         const socket = new WebSocket('ws://localhost:8080');
         
         socket.onopen = () => console.log('Подключено к серверу');
         
-        document.addEventListener('touchmove', (event) => {
-            const touch = event.touches[0];
-            const data = JSON.stringify({ x: touch.clientX, y: touch.clientY });
-            socket.send(data);
+        // Отправляем текст при каждом изменении
+        document.getElementById('textInput').addEventListener('input', (event) => {
+            const text = event.target.value;
+            socket.send(text);
         });
     </script>
 </body>

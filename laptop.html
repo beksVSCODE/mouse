@@ -2,30 +2,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mouse Receiver</title>
-    <style>
-        #cursor {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            border-radius: 50%;
-            pointer-events: none;
-        }
-    </style>
+    <title>Text Display</title>
 </head>
 <body>
-    <div id="cursor"></div>
+    <h1>Отображаемый текст:</h1>
+    <div id="displayText"></div>
+
     <script>
         const socket = new WebSocket('ws://localhost:8080');
-        const cursor = document.getElementById('cursor');
-
+        const displayText = document.getElementById('displayText');
+        
         socket.onopen = () => console.log('Подключено к серверу');
         
+        // Принимаем сообщение и выводим его на экран
         socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            cursor.style.left = data.x + 'px';
-            cursor.style.top = data.y + 'px';
+            displayText.textContent = event.data;
         };
     </script>
 </body>

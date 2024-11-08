@@ -5,9 +5,9 @@ const server = new WebSocket.Server({ port: 8080 });
 server.on('connection', socket => {
     console.log('Новое соединение установлено');
     socket.on('message', message => {
-        // Шлем данные о движении курсора на клиента (ноутбук)
+        // Рассылаем введенный текст всем подключенным клиентам
         server.clients.forEach(client => {
-            if (client !== socket && client.readyState === WebSocket.OPEN) {
+            if (client.readyState === WebSocket.OPEN) {
                 client.send(message);
             }
         });

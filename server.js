@@ -5,10 +5,13 @@ const server = new WebSocket.Server({ port: 8080 });
 server.on('connection', socket => {
     console.log('Новое соединение установлено');
     socket.on('message', message => {
-        // Рассылаем введенный текст всем подключенным клиентам как строку
+        console.log(`Получено сообщение: ${message}`); // Логируем сообщение
+
+        // Отправляем команды всем подключенным клиентам как строки
+        const messageStr = message.toString();  // Преобразуем сообщение в строку
         server.clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
-                client.send(message.toString());  // Пересылаем текст как строку
+                client.send(messageStr);  // Отправляем как строку
             }
         });
     });

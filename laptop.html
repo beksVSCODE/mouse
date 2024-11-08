@@ -2,22 +2,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Text Display</title>
+    <title>Game</title>
+    <style>
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+            top: 100px;
+            left: 100px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Отображаемый текст:</h1>
-    <div id="displayText"></div>
+    <h1>Игра: Управление квадратом</h1>
+    <div id="player"></div>
 
     <script>
         const socket = new WebSocket('ws://localhost:8080');
-        const displayText = document.getElementById('displayText');
-        
+        const player = document.getElementById('player');
+        let position = { top: 100, left: 100 };
+
         socket.onopen = () => console.log('Подключено к серверу');
-        
-        // Принимаем сообщение и выводим его на экран
-        socket.onmessage = (event) => {
-            displayText.textContent = event.data;
+
+        // Обработчик onmessage с преобразованием Blob в текст
+        socket.onmessage = async (event) => {
+            let command;
+            console.log(`Тип данных сообщения: ${event.data.constructor.name}`);
+            
+            if (event.data instanceof Blob) {
+                command = await event.data.text();  // Асинхронно преобразуем Blob в текст
+            } else {
+                command = event.data;
+            }
+            
+            handleCommand(command);  // Передаем команду в обработчик
         };
+
+        // Функция для обработки команд
+        function handleCommand(command) {
+            console.log(`Получена команда: ${command}`);  // Логируем команду
+
+            // Изменяем позицию квадрата в зависимости от команды
+            switch (command) {
+                case 'up':
+                    position.top -= 10;
+                    break;
+                case 'down':
+                    position.top += 10;
+                    break;
+                case 'left':
+                    position.left -= 10;
+                    break;
+                case 'right':
+                    position.left += 10;
+                    break;
+            }
+
+            // Обновляем положение квадрата
+            player.style.top = position.top + 'px';
+            player.style.left = position.left + 'px';
+            console.log(`Позиция квадрата: top=${position.top}, left=${position.left}`); // Логируем положение
+        }
     </script>
 </body>
 </html>

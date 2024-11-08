@@ -2,22 +2,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Phone Input</title>
+    <title>Phone Joystick</title>
 </head>
 <body>
-    <h1>Введите текст</h1>
-    <input type="text" id="textInput" placeholder="Введите текст" />
+    <h1>Джойстик</h1>
+    <button style="width: 100px; height: 100px;" onclick="sendCommand('up')">⬆️</button><br>
+    <button style="width: 100px; height: 100px;" onclick="sendCommand('left')">⬅️</button>
+    <button style="width: 100px; height: 100px;" onclick="sendCommand('right')">➡️</button><br>
+    <button style="width: 100px; height: 100px;" onclick="sendCommand('down')">⬇️</button>
 
     <script>
         const socket = new WebSocket('ws://localhost:8080');
         
         socket.onopen = () => console.log('Подключено к серверу');
         
-        // Отправляем текст в строковом формате при каждом изменении
-        document.getElementById('textInput').addEventListener('input', (event) => {
-            const text = event.target.value;
-            socket.send(text.toString());  // Убедимся, что данные отправляются как строка
-        });
+        function sendCommand(command) {
+            console.log(`Отправляем команду: ${command}`);  // Логируем команду
+            socket.send(command);  // Отправляем команду в виде строки
+        }
     </script>
 </body>
 </html>
